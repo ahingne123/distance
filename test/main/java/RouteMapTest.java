@@ -23,6 +23,14 @@ public class RouteMapTest {
 
     }
 
+    @Test
+    public void shouldAddRoutes(){
+        Map<String,Integer> testInput = new HashMap<String, Integer>();
+        RouteMap routeMap = new RouteMap(testInput);
+        routeMap.addRoute("BC", 6);
+        Assert.assertEquals(Integer.valueOf(6), routeMap.getDistanceBetweenTowns("BC"));
+    }
+
 //    @Test
 //    public void shouldCalculateDistanceBetweenThreeTowns() {
 //        String testInput = "Graph: AB5 BC4";

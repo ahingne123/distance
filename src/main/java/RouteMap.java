@@ -18,10 +18,9 @@ public class RouteMap {
 
     }
 
-    public void addRoute(Map<String, Integer> a){
 
-
+    public void addRoute(String route, int distance) {
+        drawing.put(route,distance);
 
     }
-
 }
