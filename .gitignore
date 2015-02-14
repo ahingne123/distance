@@ -3,3 +3,5 @@ Trains.ipr
 Trains.iws
 build/
 .gradle/
+out/
+.idea/
