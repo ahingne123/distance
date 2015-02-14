@@ -1,5 +1,6 @@
-package main.java;
+package com.trains;
 
+import com.trains.RouteMap;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -31,12 +32,16 @@ public class RouteMapTest {
         Assert.assertEquals(Integer.valueOf(6), routeMap.getDistanceBetweenTowns("BC"));
     }
 
-//    @Test
-//    public void shouldCalculateDistanceBetweenThreeTowns() {
-//        String testInput = "Graph: AB5 BC4";
-//        RouteMap routemap = new RouteMap(testInput);
-//        routemap.getDistanceBetweenTowns("ABC");
-//        Assert.assertEquals(Integer.valueOf(9), routemap.getDistanceBetweenTowns("ABC"));
-//    }
+    @Test
+    public void shouldCalculateDistanceBetweenThreeTowns(){
+        Map<String,Integer> testInput = new HashMap<String, Integer>();
+        RouteMap routemap = new RouteMap(testInput);
+        routemap.addRoute("AB", 5);
+        routemap.addRoute("BC", 4);
+        Assert.assertEquals(Integer.valueOf(9),routemap.calculateDistanceBetweenThreeTowns("ABC"));
+    }
+
+
+
 
 }
