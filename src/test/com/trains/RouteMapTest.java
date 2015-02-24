@@ -41,6 +41,17 @@ public class RouteMapTest {
         Assert.assertEquals(Integer.valueOf(9),routemap.calculateDistanceBetweenThreeTowns("ABC"));
     }
 
+    @Test
+    public void shouldCalculateDistanceBetweenFourTowns(){
+        Map<String,Integer> testInput = new HashMap<String, Integer>();
+        RouteMap routemap = new RouteMap(testInput);
+        routemap.addRoute("AE", 7);
+        routemap.addRoute("EB", 3);
+        routemap.addRoute("BC", 4);
+        routemap.addRoute("CD", 8);
+        Assert.assertEquals(Integer.valueOf(22),routemap.calculateDistanceBetweenFourTowns("AEBCD"));
+    }
+
 
 
 

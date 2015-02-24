@@ -39,4 +39,25 @@ public class RouteMap {
     }
 
 
+    public Integer calculateDistanceBetweenFourTowns(String fourTowns) {
+        String twoTownsFirst = fourTowns.substring(0,2);
+        int distanceFirstTwoTowns = drawing.get(twoTownsFirst);
+
+        String twoTownsSecond = fourTowns.substring(1,3);
+        int distanceSecondTwoTowns = drawing.get(twoTownsSecond);
+
+        String twoTownsThird = fourTowns.substring(2,4);
+        int distanceSecondTwoTownsThree = drawing.get(twoTownsThird);
+
+        String twoTownsFourth = fourTowns.substring(3,5);
+        int distanceSecondTwoTownsFourth = drawing.get(twoTownsFourth);
+
+        int distance3 = distanceFirstTwoTowns + distanceSecondTwoTowns +distanceSecondTwoTownsThree + distanceSecondTwoTownsFourth;
+
+
+
+        return distance3;
+    }
+
+
 }
