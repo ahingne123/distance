@@ -14,15 +14,9 @@ public class RouteMapTest {
        Map<String,Integer> testInput = new HashMap<String, Integer>();
         testInput.put("AB",5);
         testInput.put("BC",4);
-
-
         RouteMap routemap = new RouteMap(testInput);
-
-
-
         Assert.assertEquals(Integer.valueOf(5), routemap.getDistanceBetweenTowns("AB"));
         Assert.assertEquals(Integer.valueOf(4), routemap.getDistanceBetweenTowns("BC"));
-
     }
 
     @Test
@@ -51,13 +45,14 @@ public class RouteMapTest {
         routemap.addRoute("CD", 8);
         Assert.assertEquals(Integer.valueOf(22),routemap.calculateDistanceBetweenFourTowns("AEBCD"));
     }
+
     @Test
     public void shouldReturnOneWhenRouteAndItsReverseRouteExists(){
         Map<String,Integer> testInput = new HashMap<String, Integer>();
         RouteMap routemap = new RouteMap(testInput);
         routemap.addRoute("CD", 7);
         routemap.addRoute("DC", 7);
-        Assert.assertEquals(1,routemap.calculateNoOfTrips("C", "C"));
+        Assert.assertEquals(1,routemap.calculateNoOfTrips("C", "C",2));
     }
 
     @Test
@@ -67,7 +62,7 @@ public class RouteMapTest {
         routemap.addRoute("CD", 7);
         routemap.addRoute("DE", 7);
         routemap.addRoute("EC", 7);
-        Assert.assertEquals(1,routemap.calculateNoOfTrips("C", "C"));
+        Assert.assertEquals(1,routemap.calculateNoOfTrips("C", "C",2));
     }
 
     @Test
@@ -76,30 +71,28 @@ public class RouteMapTest {
         RouteMap routemap = new RouteMap(testInput);
         routemap.addRoute("CD", 7);
         routemap.addRoute("DC", 7);
-
         Assert.assertEquals(1,routemap.calculateNoOfTripsWithMaxStops("C", "C", 2));
     }
 
     @Test
-    public void shouldReturnTwoTripsWithMaxTWoStopsWhenOnlyOneTripExistsHasTwoStops(){
+    public void shouldReturnTwoTripsWithMaxThreeStopsWhenOnlyOneTripExistsHasTwoStops(){
         Map<String,Integer> testInput = new HashMap<String, Integer>();
         RouteMap routemap = new RouteMap(testInput);
         routemap.addRoute("CD", 7);
         routemap.addRoute("DC", 7);
         routemap.addRoute("DE", 7);
         routemap.addRoute("EC", 7);
-        Assert.assertEquals(2,routemap.calculateNoOfTripsWithMaxStops("C", "C", 2));
+        Assert.assertEquals(2,routemap.calculateNoOfTripsWithMaxStops("C", "C", 3));
     }
 
     @Test
-    public void shouldReturnTwoTrips(){
+    public void shouldReturnOneTripWithMaxTWoStopsWhenOnlyOneTripHasTwoStops(){
         Map<String,Integer> testInput = new HashMap<String, Integer>();
         RouteMap routemap = new RouteMap(testInput);
         routemap.addRoute("CD", 7);
         routemap.addRoute("DC", 7);
         routemap.addRoute("DE", 7);
         routemap.addRoute("EC", 7);
-        Assert.assertEquals(2,routemap.calculateNoOfTrips("C", "C"));
+        Assert.assertEquals(1,routemap.calculateNoOfTripsWithMaxStops("C", "C", 2));
     }
-//AB BD DA
 }

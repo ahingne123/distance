@@ -28,9 +28,9 @@ public class RouteMap {
         String secondTwoTowns = threeTowns.substring(1,3);
         int distanceSecondTwoTowns = drawing.get(secondTwoTowns);
 
-        int distance3 = distanceFirstTwoTowns + distanceSecondTwoTowns;
+        int totalDistance = distanceFirstTwoTowns + distanceSecondTwoTowns;
 
-        return distance3;
+        return totalDistance;
 
     }
 
@@ -38,47 +38,44 @@ public class RouteMap {
         for (int i = 0; i < input.length() - 1; i++) {
             String towns = input.substring(i, i + 2);
             if (!drawing.containsKey(towns)) {
-                String answer = "NO SUCH ROUTE";
                 return false;
 
             }
         }
-        String answer = "VALID ROUTE";
         return true;
     }
 
     public Integer calculateDistanceBetweenFourTowns(String fourTowns) {
-        String twoTownsFirst = fourTowns.substring(0,2);
-        int distanceFirstTwoTowns = drawing.get(twoTownsFirst);
+        String firstTwoTowns = fourTowns.substring(0,2);
+        int distanceFirstTwoTowns = drawing.get(firstTwoTowns);
 
-        String twoTownsSecond = fourTowns.substring(1,3);
-        int distanceSecondTwoTowns = drawing.get(twoTownsSecond);
+        String secondTwoTowns = fourTowns.substring(1,3);
+        int distanceSecondTwoTowns = drawing.get(secondTwoTowns);
 
-        String twoTownsThird = fourTowns.substring(2,4);
-        int distanceSecondTwoTownsThree = drawing.get(twoTownsThird);
+        String thirdTwoTowns = fourTowns.substring(2,4);
+        int distanceThirdTwoTowns = drawing.get(thirdTwoTowns);
 
-        String twoTownsFourth = fourTowns.substring(3,5);
-        int distanceSecondTwoTownsFourth = drawing.get(twoTownsFourth);
+        String distanceFourthTwoTowns = fourTowns.substring(3,5);
+        int distanceSecondTwoTownsFourth = drawing.get(distanceFourthTwoTowns);
 
-        int distance3 = distanceFirstTwoTowns + distanceSecondTwoTowns +distanceSecondTwoTownsThree + distanceSecondTwoTownsFourth;
-        return distance3;
+        int totalDistance = distanceFirstTwoTowns + distanceSecondTwoTowns + distanceThirdTwoTowns + distanceSecondTwoTownsFourth;
+        return totalDistance;
     }
 
-    public int calculateNoOfTrips(String startTown, String endTown) {
+    public int calculateNoOfTrips(String startTown, String endTown, int maxNoOfStops) {
         int maxTrips = 0;
         String endTownNeighbor = "";
         String startTownNeighbor = "";
-        String endTownOtherNeighbor = "";
-        int maxTowns = 1;
         Set<String> routes = drawing.keySet();
         for (String route : routes) {
-            if (route.startsWith(startTown)) {
-                String routeReverse = new StringBuffer(route).reverse().toString();
-                if (routes.contains(routeReverse)) {
-                    maxTrips++;
-                }
-            }
 
+            if(twoStopRouteExists(startTown, routes, route)){
+                maxTrips++;
+            }
+            if(maxTrips!=0 && maxNoOfStops==2){
+                break;
+            }
+            //how can we refactor the below 3 if's
             if (route.startsWith(startTown)) {
                 startTownNeighbor = route.substring(1, 2);
             }
@@ -95,6 +92,17 @@ public class RouteMap {
             return maxTrips;
         }
 
+    private boolean twoStopRouteExists(String startTown, Set<String> routes, String route) {
+        if (route.startsWith(startTown)) {
+            String routeReverse = new StringBuffer(route).reverse().toString();
+            if (routes.contains(routeReverse)) {
+               return true;
+
+            }
+        }
+        return false;
+    }
+
     private boolean neighborsFoundInRoutes(String endTownNeighbor, String startTownNeighbor) {
         if((!startTownNeighbor.equals("")) && ((!endTownNeighbor.equals("")) && !(startTownNeighbor.equals(endTownNeighbor)))){
             String combineNeighbors = startTownNeighbor.concat(endTownNeighbor);
@@ -104,18 +112,8 @@ public class RouteMap {
         }
         return false;
     }
-    public int calculateNoOfTripsWithMaxStops(String c, String c1, int i) {
-        int maxTrips = calculateNoOfTrips("C","C");
+    public int calculateNoOfTripsWithMaxStops(String startTown, String endTown, int stops) {
+        int maxTrips = calculateNoOfTrips("C","C",stops);
         return maxTrips;
     }
 }
-
-//C-D-E-K-C   combinedNeighbors = DE
-//C-K-E-D-C
-//                if(route.startsWith(endTownNeighbor)){
-//                    endTownOtherNeighbor = route.substring(1,2);
-//                }
-//                if (route.startsWith(endTownOtherNeighbor)&&route.endsWith(endTown)){
-//                    maxTowns++;
-//                    System.out.println(maxTowns);
-//                }
