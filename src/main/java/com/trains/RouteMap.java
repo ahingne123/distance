@@ -7,6 +7,8 @@ import java.util.Set;
 
 public class RouteMap {
     private Map<String, Integer> drawing = new HashMap<String, Integer>();
+    String route;
+    String newRoutesEndTown;
 
     public RouteMap(Map<String,Integer> input) {
         this.drawing = input;
@@ -24,12 +26,9 @@ public class RouteMap {
 
         String firstTwoTowns = threeTowns.substring(0,2);
         int distanceFirstTwoTowns = drawing.get(firstTwoTowns);
-
         String secondTwoTowns = threeTowns.substring(1,3);
         int distanceSecondTwoTowns = drawing.get(secondTwoTowns);
-
         int totalDistance = distanceFirstTwoTowns + distanceSecondTwoTowns;
-
         return totalDistance;
 
     }
@@ -75,7 +74,6 @@ public class RouteMap {
             if(maxTrips!=0 && maxNoOfStops==2){
                 break;
             }
-            //how can we refactor the below 3 if's
             if (route.startsWith(startTown)) {
                 startTownNeighbor = route.substring(1, 2);
             }
@@ -87,7 +85,6 @@ public class RouteMap {
                     startTownNeighbor="";
                     endTownNeighbor="";
                 }
-
             }
             return maxTrips;
         }
@@ -116,4 +113,76 @@ public class RouteMap {
         int maxTrips = calculateNoOfTrips("C","C",stops);
         return maxTrips;
     }
+    public int calculateNoOfTripsWhenStartAndEndStopNotTheSame(String startTown, String endTown, int stops) {
+
+        int maxTrips = 0;
+        int incrementStops = 0;
+
+       Set<String> routes = drawing.keySet();
+        for (String route : routes) {
+            if (route.startsWith(startTown)) {
+                incrementStops++;
+            }
+            if (doesRoutesContainARouteThatBeginsWith(getRoutesEndTown(route), routes)) {
+                incrementStops++;
+                incrementStops = getNextRoute(incrementStops, routes, maxTrips);
+                route = this.route;
+                if(incrementStops==3){
+                    incrementStops++;
+                }
+                if (incrementStops == 4) {
+                    maxTrips++;
+                }
+            }
+            incrementStops = 0;
+        }
+        return maxTrips;
+    }
+
+    private int getNextRoute(int incrementStops, Set<String> routes, int maxTrips) {
+        if (incrementStops < 4 && maxTrips < 3) {
+            String newRoute = getRouteBeginsWith(getRoutesEndTown(route)); //route here should be BC but its getting AB
+            incrementStops++;
+            newRoutesEndTown = getRoutesEndTown(newRoute);
+            doesRoutesContainARouteThatBeginsWith(newRoutesEndTown,routes);
+        }
+        return incrementStops;
+    }
+
+    private boolean doesRoutesContainARouteThatBeginsWith(String town, Set<String> routes) {
+        for (String route : routes) {
+            if (route.startsWith(town)) {
+                this.route = route;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getRoutesEndTown(String route) {
+        String routeEndTown = route.substring(1, 2);
+        return routeEndTown;
+
+    }
+
+    public String getRouteBeginsWith(String town) {
+        Set<String> routes = drawing.keySet();
+        for (String route : routes) {
+            if (route.startsWith(town)) {
+                return route;
+            }
+        }
+        return "no route found";
+    }
 }
+
+
+
+//Step 7: End list
+
+//getting rid of comments
+//renaming variables
+//removing duplication using methods
+//commit
+//debug why comp test is failing
+//another test for scenario failing
