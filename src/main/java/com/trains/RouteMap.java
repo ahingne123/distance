@@ -1,6 +1,7 @@
 package com.trains;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,7 +11,7 @@ public class RouteMap {
     String route;
     String newRoutesEndTown;
 
-    public RouteMap(Map<String,Integer> input) {
+    public RouteMap(Map<String, Integer> input) {
         this.drawing = input;
     }
 
@@ -19,14 +20,14 @@ public class RouteMap {
     }
 
     public void addRoute(String route, int distance) {
-        drawing.put(route,distance);
+        drawing.put(route, distance);
     }
 
     public Integer calculateDistanceBetweenThreeTowns(String threeTowns) {
 
-        String firstTwoTowns = threeTowns.substring(0,2);
+        String firstTwoTowns = threeTowns.substring(0, 2);
         int distanceFirstTwoTowns = drawing.get(firstTwoTowns);
-        String secondTwoTowns = threeTowns.substring(1,3);
+        String secondTwoTowns = threeTowns.substring(1, 3);
         int distanceSecondTwoTowns = drawing.get(secondTwoTowns);
         int totalDistance = distanceFirstTwoTowns + distanceSecondTwoTowns;
         return totalDistance;
@@ -45,16 +46,16 @@ public class RouteMap {
     }
 
     public Integer calculateDistanceBetweenFourTowns(String fourTowns) {
-        String firstTwoTowns = fourTowns.substring(0,2);
+        String firstTwoTowns = fourTowns.substring(0, 2);
         int distanceFirstTwoTowns = drawing.get(firstTwoTowns);
 
-        String secondTwoTowns = fourTowns.substring(1,3);
+        String secondTwoTowns = fourTowns.substring(1, 3);
         int distanceSecondTwoTowns = drawing.get(secondTwoTowns);
 
-        String thirdTwoTowns = fourTowns.substring(2,4);
+        String thirdTwoTowns = fourTowns.substring(2, 4);
         int distanceThirdTwoTowns = drawing.get(thirdTwoTowns);
 
-        String distanceFourthTwoTowns = fourTowns.substring(3,5);
+        String distanceFourthTwoTowns = fourTowns.substring(3, 5);
         int distanceSecondTwoTownsFourth = drawing.get(distanceFourthTwoTowns);
 
         int totalDistance = distanceFirstTwoTowns + distanceSecondTwoTowns + distanceThirdTwoTowns + distanceSecondTwoTownsFourth;
@@ -68,10 +69,10 @@ public class RouteMap {
         Set<String> routes = drawing.keySet();
         for (String route : routes) {
 
-            if(twoStopRouteExists(startTown, routes, route)){
+            if (twoStopRouteExists(startTown, routes, route)) {
                 maxTrips++;
             }
-            if(maxTrips!=0 && maxNoOfStops==2){
+            if (maxTrips != 0 && maxNoOfStops == 2) {
                 break;
             }
             if (route.startsWith(startTown)) {
@@ -81,19 +82,19 @@ public class RouteMap {
                 endTownNeighbor = route.substring(0, 1);
             }
             if (neighborsFoundInRoutes(endTownNeighbor, startTownNeighbor)) {
-                    maxTrips++;
-                    startTownNeighbor="";
-                    endTownNeighbor="";
-                }
+                maxTrips++;
+                startTownNeighbor = "";
+                endTownNeighbor = "";
             }
-            return maxTrips;
         }
+        return maxTrips;
+    }
 
     private boolean twoStopRouteExists(String startTown, Set<String> routes, String route) {
         if (route.startsWith(startTown)) {
             String routeReverse = new StringBuffer(route).reverse().toString();
             if (routes.contains(routeReverse)) {
-               return true;
+                return true;
 
             }
         }
@@ -101,7 +102,7 @@ public class RouteMap {
     }
 
     private boolean neighborsFoundInRoutes(String endTownNeighbor, String startTownNeighbor) {
-        if((!startTownNeighbor.equals("")) && ((!endTownNeighbor.equals("")) && !(startTownNeighbor.equals(endTownNeighbor)))){
+        if ((!startTownNeighbor.equals("")) && ((!endTownNeighbor.equals("")) && !(startTownNeighbor.equals(endTownNeighbor)))) {
             String combineNeighbors = startTownNeighbor.concat(endTownNeighbor);
             if (drawing.containsKey(combineNeighbors)) {
                 return true;
@@ -109,70 +110,105 @@ public class RouteMap {
         }
         return false;
     }
+
     public int calculateNoOfTripsWithMaxStops(String startTown, String endTown, int stops) {
-        int maxTrips = calculateNoOfTrips("C","C",stops);
+        int maxTrips = calculateNoOfTrips("C", "C", stops);
         return maxTrips;
     }
+
     public int calculateNoOfTripsWhenStartAndEndStopNotTheSame(String startTown, String endTown, int stops) {
 
         int maxTrips = 0;
         int incrementStops = 0;
 
-       Set<String> routes = drawing.keySet();
+        Set<String> routes = drawing.keySet();
         for (String route : routes) {
             if (route.startsWith(startTown)) {
                 incrementStops++;
-            }
-            if (doesRoutesContainARouteThatBeginsWith(getRoutesEndTown(route), routes)) {
+                String endingTown = getRoutesEndTown(route);
+
+                ArrayList<String> nextSetOfRoutes;
+                nextSetOfRoutes = getNextSetOfRoutes(endingTown);
                 incrementStops++;
-                incrementStops = getNextRoute(incrementStops, routes, maxTrips);
-                route = this.route;
-                if(incrementStops==3){
+                for (String aRoute : nextSetOfRoutes) {
+                    endingTown = getRoutesEndTown(aRoute);
+                    String individualRoute = getIndividualRouteWithEndingTown(endingTown);
+                    String moreRoute = areThereMoreRoutesWithThatIndividualRoute(endingTown, individualRoute);
                     incrementStops++;
+                    if (moreRoute.equals("same route")) {
+                        endingTown = getRoutesEndTown(individualRoute);
+                    } else {
+                        endingTown = getRoutesEndTown(moreRoute);
+                    }
+                    individualRoute = getIndividualRouteWithEndingTown(endingTown);
+                    incrementStops++;
+                    if (incrementStops > 3 && !individualRoute.endsWith("C")) {
+                        String routeEndingInC = findIfThereIsARouteThatEndsInC(individualRoute);
+                        if (routeEndingInC != null) {
+                            maxTrips++;
+                        }
+                    }
+                    if (incrementStops > 3 && individualRoute.endsWith("C")) {
+                        maxTrips++;
+                    }
                 }
-                if (incrementStops == 4) {
-                    maxTrips++;
-                }
+
             }
-            incrementStops = 0;
+
         }
         return maxTrips;
     }
 
-    private int getNextRoute(int incrementStops, Set<String> routes, int maxTrips) {
-        if (incrementStops < 4 && maxTrips < 3) {
-            String newRoute = getRouteBeginsWith(getRoutesEndTown(route)); //route here should be BC but its getting AB
-            incrementStops++;
-            newRoutesEndTown = getRoutesEndTown(newRoute);
-            doesRoutesContainARouteThatBeginsWith(newRoutesEndTown,routes);
-        }
-        return incrementStops;
-    }
-
-    private boolean doesRoutesContainARouteThatBeginsWith(String town, Set<String> routes) {
+    private String areThereMoreRoutesWithThatIndividualRoute(String endingTown, String individualRoute) {
+        Set<String> routes = drawing.keySet();
+        String sameRoute = "";
         for (String route : routes) {
-            if (route.startsWith(town)) {
-                this.route = route;
-                return true;
+            if (route.startsWith(endingTown)) {
+                if (route.equals(individualRoute)) {
+                    sameRoute = "same route";
+                } else {
+                    sameRoute = route;
+                }
             }
         }
-        return false;
+        return sameRoute;
+    }
+
+    private String findIfThereIsARouteThatEndsInC(String individualRoute) {
+        Set<String> routes = drawing.keySet();
+        String beginWith = individualRoute.substring(0, 1);
+        for (String route : routes) {
+            if (route.startsWith(beginWith) && route.endsWith("C")) {
+                return route;
+            }
+        }
+        return null;
+    }
+
+    private String getIndividualRouteWithEndingTown(String endingTown) {
+        Set<String> routes = drawing.keySet();
+        for (String route : routes) {
+            if (route.startsWith(endingTown)) {
+                return route;
+            }
+        }
+        return null;
     }
 
     private String getRoutesEndTown(String route) {
         String routeEndTown = route.substring(1, 2);
         return routeEndTown;
-
     }
 
-    public String getRouteBeginsWith(String town) {
+    public ArrayList<String> getNextSetOfRoutes(String town) {
         Set<String> routes = drawing.keySet();
+        ArrayList<String> ofRoutes = new ArrayList<>();
         for (String route : routes) {
             if (route.startsWith(town)) {
-                return route;
+                ofRoutes.add(route);
             }
         }
-        return "no route found";
+        return ofRoutes;
     }
 }
 

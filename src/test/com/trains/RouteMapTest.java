@@ -1,10 +1,8 @@
 package com.trains;
 
-import com.trains.RouteMap;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -158,7 +156,7 @@ public class RouteMapTest {
         Map<String,Integer> testInput = new HashMap<String, Integer>();
         RouteMap routemap = new RouteMap(testInput);
         routemap.addRoute("AB", 7);
-        Assert.assertEquals("AB", routemap.getRouteBeginsWith("A"));
+        Assert.assertEquals("AB", routemap.getNextSetOfRoutes("A"));
 
     }
     @Test
@@ -166,7 +164,19 @@ public class RouteMapTest {
         Map<String,Integer> testInput = new HashMap<String, Integer>();
         RouteMap routemap = new RouteMap(testInput);
         routemap.addRoute("AB", 7);
-        Assert.assertEquals("no route found",routemap.getRouteBeginsWith("M"));
+        Assert.assertEquals("no route found",routemap.getNextSetOfRoutes("M"));
     }
+    @Test
+    public void shouldReturnTripsWithMaxFourStopsExtra(){
+        Map<String,Integer> testInput = new HashMap<String, Integer>();
+        RouteMap routemap = new RouteMap(testInput);
+        routemap.addRoute("AD", 7);
+        routemap.addRoute("DC", 7);
+        routemap.addRoute("CD", 7);
+        routemap.addRoute("DE", 7);
+        routemap.addRoute("EB", 7);
+        routemap.addRoute("BC", 7);
+        Assert.assertEquals(2,routemap.calculateNoOfTripsWhenStartAndEndStopNotTheSame("A", "C", 4));
 }
-
+}
+//4/29 - All tests are passing except the main test. Need to make this pass.
